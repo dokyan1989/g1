@@ -1,0 +1,56 @@
+syntax = "proto3";
+package app.service1.pb;
+option go_package = "app/service1/pb";
+
+import "data.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service EmployeeService {
+  rpc ListEmployees(ListEmployeesRequest) returns (ListEmployeesResponse) {
+    option (google.api.http) = {
+      get : "/api/v1/employees"
+    };
+  }
+
+  rpc CreateEmployee(CreateEmployeeRequest) returns (CreateEmployeeResponse) {
+    option (google.api.http) = {
+      post : "/api/v1/employees",
+      body : "*"
+    };
+  }
+}
+
+message ListEmployeesRequest {
+  // emp_nos - support multiple emp_nos
+  repeated uint64 emp_nos = 1;
+  // names - support multiple names
+  repeated string names = 2;
+  // birth_dates
+  repeated google.protobuf.Timestamp birth_dates = 3;
+  // gender
+  Gender gender = 4;
+  // hire_dates
+  repeated google.protobuf.Timestamp hire_dates = 5;
+  // limit
+  uint32 limit = 6;
+  // offset
+  uint64 offset = 7;
+}
+
+message ListEmployeesResponse { repeated Employee data = 1; }
+
+message CreateEmployeeRequest {
+  // birth_date
+  google.protobuf.Timestamp birth_date = 1;
+  // first_name
+  string first_name = 2;
+  // last_name
+  string last_name = 3;
+  // gender
+  Gender gender = 4;
+  // hire_date
+  google.protobuf.Timestamp hire_date = 5;
+}
+
+message CreateEmployeeResponse { uint64 id = 1; }

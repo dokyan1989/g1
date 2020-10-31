@@ -1,0 +1,15 @@
+MYSQL:
+ HOST: 127.0.0.1
+ PORT: 3307
+ DATABASE: "service1"
+ USERNAME: "root"
+ PASSWORD: "123456"
+ OPTIONS: "?charset=utf8mb4&parseTime=true"
+
+SERVER:
+ GRPC:
+  HOST: localhost
+  PORT: 8001
+ HTTP:
+  HOST: localhost
+  PORT: 8002

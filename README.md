@@ -1,4 +1,4 @@
-# Golang utilities
+# Project to learn go
 
 ## Regular Expressions
 
@@ -15,3 +15,9 @@
 [Go Data Structures: Interfaces](https://research.swtch.com/interfaces)
 
 [The Laws of Reflection](https://blog.golang.org/laws-of-reflection)
+
+[rest-api-response-format](https://github.com/cryptlex/rest-api-response-format)
+
+## MySQL
+https://www3.ntu.edu.sg/home/ehchua/programming/sql/SampleDatabases.html
+https://stackoverflow.com/questions/19251910/difference-between-sql-and-dump-files

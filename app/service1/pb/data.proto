@@ -1,0 +1,26 @@
+syntax = "proto3";
+package app.service1.pb;
+option go_package = "app/service1/pb";
+
+import "google/protobuf/timestamp.proto";
+
+message Product {
+  uint64 id = 1;
+  string name = 2;
+  double price = 3;
+}
+
+message Employee {
+  uint64 emp_no = 1;
+  google.protobuf.Timestamp birth_date = 2;
+  string first_name = 3;
+  string last_name = 4;
+  Gender gender = 5;
+  google.protobuf.Timestamp hire_date = 6;
+}
+
+enum Gender {
+  UNKNOWN = 0;
+  MALE = 1;
+  FEMALE = 2;
+}
