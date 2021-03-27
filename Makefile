@@ -10,11 +10,17 @@ install_pb_tools:
 	rm -f $(PROTOC_LINUX_ZIP)
 
 gen_pb:
-	rm $(path)/pb/*.go && \
-	protoc --proto_path=$(path)/pb --go_out=. --go-grpc_out=. --grpc-gateway_out=. $(path)/pb/*.proto
+	protoc --proto_path=app/$(sn)/proto \
+	       --proto_path=third_party/envoyproxy \
+	       --proto_path=third_party/googleapis \
+	       --go_out=. \
+	       --go-grpc_out=. \
+	       --grpc-gateway_out=. \
+	       --validate_out="lang=go:." \
+	       app/$(sn)/proto/*.proto
 
 clean_pb:
-	rm $(path)/pb/*.go
+	rm app/$(sn)/pb/*.go
 
 create_mysql_container:
 	sudo docker run --name g1mysql -e MYSQL_ROOT_PASSWORD=123456 -d -p 3307:3306 mysql
@@ -22,17 +28,20 @@ create_mysql_container:
 start_mysql_container:
 	sudo docker container start g1mysql
 
+connect_mysql_container:
+	sudo docker exec -it g1mysql mysql -uroot -p123456 service1
+
 migrate_file:
-	migrate create -ext sql -dir $(path)/migrations $(name)
+	migrate create -ext sql -dir app/$(sn)/migrations $(fn)
 
 migrate_up:
-	migrate -source file://$(path)/migrations -database '$(MYSQL_URL)' up
+	migrate -source file://app/$(sn)/migrations -database '$(MYSQL_URL)' up
 
 migrate_down:
-	migrate -source file://$(path)/migrations -database '$(MYSQL_URL)' down $(num)
+	migrate -source file://app/$(sn)/migrations -database '$(MYSQL_URL)' down $(num)
 
 migrate_force:
-	migrate -source file://$(path)/migrations -database '$(MYSQL_URL)' force 20210325104212
+	migrate -source file://app/$(sn)/migrations -database '$(MYSQL_URL)' force 20210325104212
 
 dump_data:
 	sudo docker exec g1mysql mysqldump -uroot -p123456 service1 > service1.sql
@@ -48,11 +57,11 @@ restore_data:
 	sudo docker exec -i g1mysql sh -c 'exec mysql -uroot -p123456 service1' < $(SEED_PATH)/load_salaries3.dump
 
 server:
-	go run app/$(name)/cmd/server/main.go
+	go run app/$(sn)/cmd/server/main.go
 
 client: 
-	go run app/$(name)/cmd/client/main.go
+	go run app/$(sn)/cmd/client/main.go
 
 .PHONY:
-	install_pb_tools gen_pb clean_pb create_mysql_container start_mysql_container	\
+	install_pb_tools gen_pb clean_pb create_mysql_container start_mysql_container connect_mysql_container \
 	migration_file migrate_up migrate_down dump_data server client

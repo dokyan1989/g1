@@ -43,7 +43,6 @@ func run(args []string) error {
 
 		grpcServer := grpc.NewServer()
 		s := server.New(cfg)
-		pb.RegisterProductServiceServer(grpcServer, s)
 		pb.RegisterEmployeeServiceServer(grpcServer, s)
 		grpcServer.Serve(lis)
 	}()
@@ -52,10 +51,6 @@ func run(args []string) error {
 	go func() {
 		mux := runtime.NewServeMux()
 		opts := []grpc.DialOption{grpc.WithInsecure()}
-		if err := pb.RegisterProductServiceHandlerFromEndpoint(context.Background(), mux, grpcAddr, opts); err != nil {
-			log.Fatalf("failed to listen: %v", err)
-		}
-
 		if err := pb.RegisterEmployeeServiceHandlerFromEndpoint(context.Background(), mux, grpcAddr, opts); err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}

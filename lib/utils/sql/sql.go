@@ -15,7 +15,11 @@ func RepeatQuestionMarks(n int) string {
 	return strings.Join(questionMarks, ",")
 }
 
-func MakeSqlIn(col string, vals interface{}) (string, []interface{}, error) {
+func AppendClause(sql, cls string) string {
+	return fmt.Sprintf("%s %s", sql, cls)
+}
+
+func BuildSqlIn(col string, vals interface{}) (string, []interface{}, error) {
 	switch reflect.TypeOf(vals).Kind() {
 	case reflect.Slice:
 		s := reflect.ValueOf(vals)
@@ -32,7 +36,7 @@ func MakeSqlIn(col string, vals interface{}) (string, []interface{}, error) {
 	return "", []interface{}{}, errors.New("'vals' must be a slice")
 }
 
-func MakeSqlLimitOffset(limit uint32, offset uint64) string {
+func BuildSqlLimitOffset(limit uint32, offset uint64) (string, uint32, uint64) {
 	var l uint32 = 10
 	var o uint64 = 0
 
@@ -44,5 +48,5 @@ func MakeSqlLimitOffset(limit uint32, offset uint64) string {
 		o = offset
 	}
 
-	return fmt.Sprintf("limit %d offset %d", l, o)
+	return "limit ? offset ?", l, o
 }

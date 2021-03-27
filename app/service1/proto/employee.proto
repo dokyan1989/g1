@@ -1,0 +1,102 @@
+syntax = "proto3";
+package app.service1.pb;
+option go_package = "app/service1/pb";
+
+import "data.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+service EmployeeService {
+  rpc ListEmployees(ListEmployeesRequest) returns (ListEmployeesResponse) {
+    option (google.api.http) = {
+      get : "/api/v1/employees"
+    };
+  }
+
+  rpc CreateEmployee(CreateEmployeeRequest) returns (CreateEmployeeResponse) {
+    option (google.api.http) = {
+      post : "/api/v1/employees",
+      body : "*"
+    };
+  }
+
+  rpc UpdateEmployee(UpdateEmployeeRequest) returns (UpdateEmployeeResponse) {
+    option (google.api.http) = {
+      put : "/api/v1/employees/{emp_no}",
+      body : "*"
+    };
+  }
+
+  rpc DeleteEmployee(DeleteEmployeeRequest) returns (DeleteEmployeeResponse) {
+    option (google.api.http) = {
+      delete : "/api/v1/employees/{emp_no}"
+    };
+  }
+}
+
+message ListEmployeesRequest {
+  // emp_nos - support multiple emp_nos
+  repeated uint64 emp_nos = 1;
+  // names - support multiple names
+  repeated string names = 2;
+  // from_birth_date
+  google.protobuf.Timestamp from_birth_date = 3;
+  // to_birth_date
+  google.protobuf.Timestamp to_birth_date = 4;
+  // gender
+  Gender gender = 5;
+  // from_hire_date
+  google.protobuf.Timestamp from_hire_date = 6;
+  // to_hire_date
+  google.protobuf.Timestamp to_hire_date = 7;
+  // limit
+  uint32 limit = 101;
+  // offset
+  uint64 offset = 102;
+}
+
+message ListEmployeesResponse { repeated Employee data = 1; }
+
+message CreateEmployeeRequest {
+  // birth_date
+  google.protobuf.Timestamp birth_date = 1
+      [ (validate.rules).timestamp.required = true ];
+  // first_name
+  string first_name = 2 [ (validate.rules).string.min_len = 1 ];
+  // last_name
+  string last_name = 3 [ (validate.rules).string.min_len = 1 ];
+  // gender
+  Gender gender = 4 [ (validate.rules).enum = {in : [ 1, 2 ]} ];
+  // hire_date
+  google.protobuf.Timestamp hire_date = 5
+      [ (validate.rules).timestamp.required = true ];
+}
+
+message CreateEmployeeResponse { uint64 emp_no = 1; }
+
+message UpdateEmployeeRequest {
+  // emp_no
+  uint64 emp_no = 1 [ (validate.rules).uint64.gte = 1 ];
+  // birth_date
+  google.protobuf.Timestamp birth_date = 2
+      [ (validate.rules).timestamp.required = true ];
+  // first_name
+  string first_name = 3 [ (validate.rules).string.min_len = 1 ];
+  // last_name
+  string last_name = 4 [ (validate.rules).string.min_len = 1 ];
+  // gender
+  Gender gender = 5 [ (validate.rules).enum = {in : [ 1, 2 ]} ];
+  // hire_date
+  google.protobuf.Timestamp hire_date = 6
+      [ (validate.rules).timestamp.required = true ];
+}
+
+message UpdateEmployeeResponse { uint64 emp_no = 1; }
+
+message DeleteEmployeeRequest {
+  // emp_no
+  uint64 emp_no = 1 [ (validate.rules).uint64.gte = 1 ];
+}
+
+message DeleteEmployeeResponse { uint64 emp_no = 1; }

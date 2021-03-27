@@ -13,7 +13,6 @@ import (
 // Server ...
 type Server struct {
 	// GRPC
-	pb.UnimplementedProductServiceServer
 	pb.UnimplementedEmployeeServiceServer
 
 	// Common

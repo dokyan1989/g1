@@ -14,8 +14,8 @@ func main() {
 		log.Fatalf("failed to dial: %v", err)
 	}
 	defer conn.Close()
-	client := pb.NewProductServiceClient(conn)
-	resp, err := client.ListProducts(context.Background(), &pb.ListProductsRequest{})
+	client := pb.NewEmployeeServiceClient(conn)
+	resp, err := client.ListEmployees(context.Background(), &pb.ListEmployeesRequest{})
 	if err != nil {
 		log.Fatalf("failed to call: %v", err)
 	}

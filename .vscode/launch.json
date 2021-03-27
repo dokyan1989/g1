@@ -18,6 +18,26 @@
         "MYSQL__DATABASE": "db1",
       },
       "args": []
+    },
+    {
+      "name": "Launch service1",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/app/service1/cmd/server",
+      "env": {
+        "MYSQL__USERNAME": "root",
+        "MYSQL__PASSWORD": "123456",
+        "MYSQL__HOST": "127.0.0.1",
+        "MYSQL__PORT": 3307,
+        "MYSQL__DATABASE": "service1",
+        "MYSQL__OPTIONS": "?charset=utf8mb4&parseTime=true",
+        "SERVER__GRPC__HOST": "localhost",
+        "SERVER__GRPC__PORT": 8001,
+        "SERVER__HTTP__HOST": "localhost",
+        "SERVER__HTTP__PORT": 8002,
+      },
+      "args": []
     }
   ]
 }
